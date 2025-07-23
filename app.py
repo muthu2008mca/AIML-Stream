@@ -1,29 +1,25 @@
-import numpy as np
-from flask import Flask, request, render_template
 import pickle
+from flask import Flask, request, render_template
+import numpy as np
+import math
 
 app = Flask(__name__)
-
-# Load the model
-model1 = pickle.load(open('E:/movie_interest_webapp/data/model.pkl', 'rb'))
+model2 = pickle.load(open('model.pkl','rb'))
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # The form to input values
+    return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get input from HTML form
-    val1 = float(request.form['feature1'])
-    val2 = float(request.form['feature2'])
-    val3 = float(request.form['feature3'])
-    val4 = float(request.form['feature4'])
+    int_feature = [int(i) for i in request.form.values()] #[1,2,3,5]
 
-    # Format input data for prediction
-    input_data = [[val1, val2], [val3, val4]]  # Two users' inputs
-    predictions = model1.predict(input_data)
+    final_feature = np.array(int_feature).reshape(1, -1)
 
-    return render_template('result.html', prediction=predictions)
+    prediction = model2.predict(final_feature) #[[1,2,3,4]]
+    output = round(prediction[0],2)
+
+    return render_template('index.html', predict_text = 'Number of weekly rides {}'.format(math.floor(output)))
 
 if __name__ == '__main__':
     app.run(debug=True)
