@@ -5,7 +5,7 @@ import pickle
 # Load the model
 model = pickle.load(open("model.pkl", "rb"))
 
-st.title("🎬 Movie Interest Predictor")
+st.title("Movie Interest Predictor")
 
 # User 1
 st.subheader("User 1")
